@@ -1,0 +1,61 @@
+version: '3'
+
+services:
+  nginx-proxy:
+    restart: always
+    image: jwilder/nginx-proxy
+    container_name: nginx-proxy
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - /etc/nginx/vhost.d
+      - /etc/nginx/certs
+      - /usr/share/nginx/html
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+
+  ssl-generator:
+    image: jrcs/letsencrypt-nginx-proxy-companion
+    volumes_from:
+      - nginx-proxy
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
+  dnd-board-api:
+    restart: always
+    image: more-than-blogs-api
+    container_name: more-than-blogs-api
+    build: ./more-than-blogs-api
+    volumes: 
+      - ./more-than-blogs-api/build:/app
+    expose:
+      - 80
+    environment:
+      - VIRTUAL_HOST=api.morethanblogs.tk
+      - LETSENCRYPT_HOST=api.morethanblogs.tk
+
+  more-than-blogs-landing:
+    restart: always
+    image: more-than-blogs-landing
+    container_name: more-than-blogs-landing
+    build: ./more-than-blogs-landing
+    volumes:
+      - ./more-than-blogs-landing/build:/usr/share/nginx/html
+    expose:
+      - 80
+    environment:
+      - VIRTUAL_HOST=morethanblogs.tk
+      - LETSENCRYPT_HOST=morethanblogs.tk
+
+  more-than-blogs-admin:
+    restart: always
+    image: more-than-blogs-admin
+    container_name: more-than-blogs-admin
+    build: ./more-than-blogs-admin
+    volumes:
+      - ./more-than-blogs-admin/build:/usr/share/nginx/html
+    expose:
+      - 80
+    environment:
+      - VIRTUAL_HOST=admin.morethanblogs.tk
+      - LETSENCRYPT_HOST=admin.morethanblogs.tk
