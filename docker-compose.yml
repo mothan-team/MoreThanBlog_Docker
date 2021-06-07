@@ -21,7 +21,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
 
-  dnd-board-api:
+  more-than-blogs-api:
     restart: always
     image: more-than-blogs-api
     container_name: more-than-blogs-api
