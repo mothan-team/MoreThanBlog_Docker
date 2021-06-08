@@ -2,26 +2,30 @@ version: '3'
 
 services:
   nginx-proxy:
-    restart: always
     image: jwilder/nginx-proxy
     container_name: nginx-proxy
     ports:
       - 80:80
       - 443:443
     volumes:
-      - /etc/nginx/vhost.d
-      - /etc/nginx/certs
-      - /usr/share/nginx/html
+      - vhost:/etc/nginx/vhost.d
+      - html:/usr/share/nginx/html
+      - certs:/etc/nginx/certs
       - /var/run/docker.sock:/tmp/docker.sock:ro
+    networks: 
+      - proxy-tier
 
   ssl-generator:
     image: jrcs/letsencrypt-nginx-proxy-companion
+    container_name: letsencrypt
     volumes_from:
       - nginx-proxy
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks: 
+      - proxy-tier
 
-  dnd-board-api:
+  more-than-blogs-api:
     restart: always
     image: more-than-blogs-api
     container_name: more-than-blogs-api
@@ -33,6 +37,8 @@ services:
     environment:
       - VIRTUAL_HOST=api.morethanblogs.tk
       - LETSENCRYPT_HOST=api.morethanblogs.tk
+    networks: 
+      - proxy-tier
 
   more-than-blogs-landing:
     restart: always
@@ -46,6 +52,8 @@ services:
     environment:
       - VIRTUAL_HOST=morethanblogs.tk
       - LETSENCRYPT_HOST=morethanblogs.tk
+    networks: 
+      - proxy-tier
 
   more-than-blogs-admin:
     restart: always
@@ -59,3 +67,15 @@ services:
     environment:
       - VIRTUAL_HOST=admin.morethanblogs.tk
       - LETSENCRYPT_HOST=admin.morethanblogs.tk
+    networks: 
+      - proxy-tier
+
+volumes:
+  vhost:
+  html:
+  certs:
+
+networks:
+  proxy-tier:
+    external:
+      name: nginx-proxy
