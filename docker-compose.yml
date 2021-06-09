@@ -35,8 +35,8 @@ services:
     expose:
       - 80
     environment:
-      - VIRTUAL_HOST=api.morethanblogs.tk
-      - LETSENCRYPT_HOST=api.morethanblogs.tk
+      - VIRTUAL_HOST=api.morethanblog.tk
+      - LETSENCRYPT_HOST=api.morethanblog.tk
     networks: 
       - proxy-tier
 
@@ -50,8 +50,8 @@ services:
     expose:
       - 80
     environment:
-      - VIRTUAL_HOST=morethanblogs.tk
-      - LETSENCRYPT_HOST=morethanblogs.tk
+      - VIRTUAL_HOST=morethanblog.tk
+      - LETSENCRYPT_HOST=morethanblog.tk
     networks: 
       - proxy-tier
 
@@ -65,8 +65,8 @@ services:
     expose:
       - 80
     environment:
-      - VIRTUAL_HOST=admin.morethanblogs.tk
-      - LETSENCRYPT_HOST=admin.morethanblogs.tk
+      - VIRTUAL_HOST=admin.morethanblog.tk
+      - LETSENCRYPT_HOST=admin.morethanblog.tk
     networks: 
       - proxy-tier
 
