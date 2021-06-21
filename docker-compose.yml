@@ -70,6 +70,22 @@ services:
     networks: 
       - proxy-tier
 
+  hoolicash-api:
+    restart: always
+    image: hoolicash-api
+    container_name: hoolicash-api
+    build: ./hoolicash-api
+    volumes: 
+      - ./hoolicash-api/build:/app
+    expose:
+      - 80
+    environment:
+      - VIRTUAL_HOST=api.hoolicash.cf
+      - LETSENCRYPT_HOST=api.hoolicash.cf
+    networks: 
+      - proxy-tier
+
+
 volumes:
   vhost:
   html:
