@@ -85,6 +85,20 @@ services:
     networks: 
       - proxy-tier
 
+  hoolicash-admin:
+    restart: always
+    image: hoolicash-admin
+    container_name: hoolicash-admin
+    build: ./hoolicash-admin
+    volumes:
+      - ./hoolicash-admin/build:/usr/share/nginx/html
+    expose:
+      - 80
+    environment:
+      - VIRTUAL_HOST=admin.hoolicash.cf
+      - LETSENCRYPT_HOST=admin.hoolicash.cf
+    networks: 
+      - proxy-tier
 
 volumes:
   vhost:
